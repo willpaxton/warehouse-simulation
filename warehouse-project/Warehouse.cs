@@ -6,7 +6,17 @@ using System.Threading.Tasks;
 
 namespace warehouse_project
 {
-    internal class Warehouse
+    public class Warehouse
     {
+        List<Dock> Docks = new List<Dock>();
+
+        Queue<Truck> Entrance = new Queue<Truck>();
+
+        public void Run()
+        {
+
+        }
+
+
     }
 }
