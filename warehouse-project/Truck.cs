@@ -8,8 +8,8 @@ namespace warehouse_project
 {
     internal class Truck
     {
-        string driver;
-        string deliveryCompany;
+        string driver; //Assign Random Driver
+        string deliveryCompany; //Assign Delivery Company From The Driver Line
         Stack<Crate> Trailer;
 
         void Load(Crate crate)

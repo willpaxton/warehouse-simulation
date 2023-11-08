@@ -8,7 +8,7 @@ namespace warehouse_project
 {
     internal class Crate
     {
-        string id;
+        string id; //Automatically assign a random id and check that it doesn't duplicate
         double price;
 
         public Crate()
