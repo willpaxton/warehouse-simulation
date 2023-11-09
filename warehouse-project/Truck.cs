@@ -21,5 +21,11 @@ namespace warehouse_project
         { 
             return Trailer.Pop();
         }
+
+        void GetRandomDriverAndCompany()
+        {
+            //Read the Lines and Add Name to a List/Array
+            //Read the Lines and Add 
+        }
     }
 }
