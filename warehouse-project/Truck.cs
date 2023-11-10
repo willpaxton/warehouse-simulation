@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace warehouse_project
 {
-    internal class Truck
+    public class Truck
     {
         string driver;
         string deliveryCompany;

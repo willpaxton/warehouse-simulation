@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace warehouse_project
 {
-    internal class Crate
+    public class Crate
     {
-        string id;
-        double price;
+        private string id;
+        private double price;
 
         public Crate()
         {
