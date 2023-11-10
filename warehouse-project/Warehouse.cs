@@ -18,16 +18,32 @@ namespace warehouse_project
             // Creates the docks being used in this simulation
             for (int i = 0; i < numberOfDocks; i++)
             {
-                Docks[i] = new Dock(); 
+                Dock dock = new Dock();
+                Docks.Add(dock);
             }
+
+            Docks[0].JoinLine(new Truck());
+
+            Docks[0].ActiveTruck.Load(new Crate());
 
             foreach (Dock dock in Docks)
             {
                 // Unload
+                // need to implement totalcrates count
+                if (dock.ActiveTruck != null)
+                {
+                    Crate unloadedCrate = dock.ActiveTruck.Unload();
+                    double value = unloadedCrate.GetPrice();
+                    dock.TotalSales += value;
+                    dock.TimeInUse++;
+                } else
+                {
+                    dock.TimeNotInUse++;
+                }
 
                 // Swap Trucks
-
-                // Count Stats
+                if (dock.ActiveTruck.Trailer.Count == 0) dock.SendOff();
+                
 
                 // Log
             }

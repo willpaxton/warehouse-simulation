@@ -23,6 +23,8 @@ namespace warehouse_project
 
         public int TimeNotInUse { get; set; } = 0;
 
+        public Truck? ActiveTruck => Line.Count() != 0 ? Line.Peek() : null;
+
         public void JoinLine(Truck truck)
         {
             Line.Enqueue(truck);    
@@ -30,12 +32,14 @@ namespace warehouse_project
 
         public Truck SendOff()
         {
+            TotalTrucks++;
             return Line.Dequeue();
         }
 
         public Dock()
         {
-            Line = new Queue<Truck>();
+            
         }
+
     }
 }
