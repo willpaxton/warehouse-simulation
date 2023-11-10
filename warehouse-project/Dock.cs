@@ -11,7 +11,7 @@ namespace warehouse_project
     {
         public String Id { get; set; } // probably should be incremental
 
-        Queue<Truck> Line = new Queue<Truck>();
+        public Queue<Truck> Line = new Queue<Truck>();
 
         public double TotalSales { get; set; } = 0;
 
@@ -36,9 +36,9 @@ namespace warehouse_project
             return Line.Dequeue();
         }
 
-        public Dock()
+        public Dock(int position)
         {
-            
+            Id = position.ToString();
         }
 
     }

@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            int NUMBER_OF_DOCKS = 1;
+            int NUMBER_OF_DOCKS = 5;
 
             Warehouse simulation = new Warehouse();
 

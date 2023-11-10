@@ -18,34 +18,24 @@ namespace warehouse_project
             // Creates the docks being used in this simulation
             for (int i = 0; i < numberOfDocks; i++)
             {
-                Dock dock = new Dock();
+                Dock dock = new Dock(i + 1);
                 Docks.Add(dock);
             }
 
-            Docks[0].JoinLine(new Truck());
+            // So for now, this is only working through one time period, everything below will need to be looped
 
-            Docks[0].ActiveTruck.Load(new Crate());
+            // Adding new trucks to the warehouse queue
+            Random randy = new Random();
+            for (int i = 0; i < randy.Next(1, 5); i++)
+            {
+                Truck newTruck = new Truck();
+                for (int j = 0; j < randy.Next(1, 5); j++) newTruck.Load(new Crate());
+                this.Entrance.Enqueue(newTruck);
+            }
 
             foreach (Dock dock in Docks)
             {
-                // Unload
-                // need to implement totalcrates count
-                if (dock.ActiveTruck != null)
-                {
-                    Crate unloadedCrate = dock.ActiveTruck.Unload();
-                    double value = unloadedCrate.GetPrice();
-                    dock.TotalSales += value;
-                    dock.TimeInUse++;
-                } else
-                {
-                    dock.TimeNotInUse++;
-                }
-
-                // Swap Trucks
-                if (dock.ActiveTruck.Trailer.Count == 0) dock.SendOff();
-                
-
-                // Log
+                Unload(dock);
             }
         }
 
@@ -57,6 +47,54 @@ namespace warehouse_project
         public void Log()
         {
 
+        }
+
+        /// <summary>
+        /// Completes one time span
+        /// </summary>
+        public void Unload(Dock dock)
+        {
+            while (this.Entrance.Count > 0)
+            {
+                Dock shortestDock = null;
+                int shortestLineLength = int.MaxValue;
+
+                foreach (Dock dockLen in Docks)
+                {
+                    if (dockLen.Line.Count() < shortestLineLength)
+                    {
+                        shortestDock = dockLen; 
+                        shortestLineLength = dockLen.Line.Count();
+                    }
+                    
+                }
+
+                shortestDock.JoinLine(this.Entrance.Dequeue());
+
+            }
+
+            // Check if dock line empty, if so, add truck
+            // if (dock.ActiveTruck == null) dock.JoinLine(this.Entrance.Dequeue());
+
+            // Unload
+            // need to implement totalcrates count
+            if (dock.ActiveTruck != null)
+            {
+                Crate unloadedCrate = dock.ActiveTruck.Unload();
+                double value = unloadedCrate.GetPrice();
+                dock.TotalSales += value;
+                dock.TimeInUse++;
+            }
+            else dock.TimeNotInUse++;
+
+            // Swap Trucks
+            if (dock.ActiveTruck is not null)
+            {
+                if (dock.ActiveTruck.Trailer.Count == 0) dock.SendOff();
+            }
+
+
+            // Log
         }
 
 
