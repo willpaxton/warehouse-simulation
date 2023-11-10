@@ -13,7 +13,7 @@ namespace warehouse_project
         Queue<Truck> Entrance = new Queue<Truck>();
 
         // accepts some arguments (constants) from the driver
-        public void Run(int numberOfDocks)
+        public void Run(int numberOfDocks, int numberOfStartingTrucks, int numberOfMaxCrates)
         {
             // Creates the docks being used in this simulation
             for (int i = 0; i < numberOfDocks; i++)
@@ -26,17 +26,28 @@ namespace warehouse_project
 
             // Adding new trucks to the warehouse queue
             Random randy = new Random();
-            for (int i = 0; i < randy.Next(1, 5); i++)
+            int numOfTrucks = randy.Next(1, numberOfStartingTrucks);
+            
+
+            for (int i = 0; i < numOfTrucks; i++)
             {
                 Truck newTruck = new Truck();
-                for (int j = 0; j < randy.Next(1, 5); j++) newTruck.Load(new Crate());
+                int numOfCrates = randy.Next(1, numberOfMaxCrates);
+                for (int j = 0; j < numOfCrates; j++) newTruck.Load(new Crate());
                 this.Entrance.Enqueue(newTruck);
             }
 
-            foreach (Dock dock in Docks)
+            Console.WriteLine("!");
+
+            for (int x = 0; x < 48; x++)
             {
-                Unload(dock);
+                foreach (Dock dock in Docks)
+                {
+                    Unload(dock);
+                }
+                Console.WriteLine(x);
             }
+            
         }
 
         /// <summary>
@@ -44,9 +55,14 @@ namespace warehouse_project
         /// </summary>
         // We just gotta figure out how to do this, but it's our method would be better
         // Maybe returns a boolean if successful?
-        public void Log()
+        internal void Log()
         {
-
+            // im too lazy to write to a file rn
+            for (int i = 0; i < Docks.Count; i++)
+            {
+                Console.WriteLine($"Dock {i+1} - {Docks[i].Line.Count}");
+            }
+            Console.WriteLine("Unloaded");
         }
 
         /// <summary>
@@ -84,6 +100,7 @@ namespace warehouse_project
                 double value = unloadedCrate.GetPrice();
                 dock.TotalSales += value;
                 dock.TimeInUse++;
+                Log();
             }
             else dock.TimeNotInUse++;
 
@@ -91,6 +108,7 @@ namespace warehouse_project
             if (dock.ActiveTruck is not null)
             {
                 if (dock.ActiveTruck.Trailer.Count == 0) dock.SendOff();
+
             }
 
 
