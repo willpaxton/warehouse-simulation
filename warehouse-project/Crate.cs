@@ -6,17 +6,25 @@ using System.Threading.Tasks;
 
 namespace warehouse_project
 {
-    internal class Crate
+    public class Crate
     {
-        string id;
-        double price;
+        private string id;
+        private double price;
 
         public Crate()
         {
             this.price = GetPrice();
+            id = GetID();
         }
 
-        private double GetPrice()
+        public string GetID()
+        {
+            Random rnd = new Random();
+            int intID = rnd.Next(0, 1000000);
+            return intID.ToString();
+        }
+
+        public double GetPrice()
         {
             Random rnd = new Random();
             return rnd.Next(50, 501);

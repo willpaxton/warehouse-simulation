@@ -6,20 +6,25 @@ using System.Threading.Tasks;
 
 namespace warehouse_project
 {
-    internal class Truck
+    public class Truck
     {
         string driver;
         string deliveryCompany;
-        Stack<Crate> Trailer;
+        public Stack<Crate> Trailer = new Stack<Crate>();
 
-        void Load(Crate crate)
+        public void Load(Crate crate)
         {
             Trailer.Push(crate);
         }
 
-        Crate Unload() 
+        public Crate Unload() 
         { 
             return Trailer.Pop();
+        }
+
+        public Truck()
+        {
+            
         }
     }
 }
