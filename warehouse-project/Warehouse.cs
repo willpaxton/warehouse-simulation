@@ -12,6 +12,8 @@ namespace warehouse_project
 
         Queue<Truck> Entrance = new Queue<Truck>();
 
+        int numThatTruckHasToBeLargerThenFromOneHundred;
+
         // accepts some arguments (constants) from the driver
         public void Run(int numberOfDocks, int numberOfStartingTrucks, int numberOfMaxCrates)
         {
@@ -27,20 +29,16 @@ namespace warehouse_project
             // Adding new trucks to the warehouse queue
             Random randy = new Random();
             int numOfTrucks = randy.Next(1, numberOfStartingTrucks);
-            
-
-            for (int i = 0; i < numOfTrucks; i++)
-            {
-                Truck newTruck = new Truck();
-                int numOfCrates = randy.Next(1, numberOfMaxCrates);
-                for (int j = 0; j < numOfCrates; j++) newTruck.Load(new Crate());
-                this.Entrance.Enqueue(newTruck);
-            }
 
             Console.WriteLine("!");
 
             for (int x = 0; x < 48; x++)
             {
+                if (DoesTruckArive(x))
+                {
+                    CreateTruck(numberOfMaxCrates);
+                }
+
                 foreach (Dock dock in Docks)
                 {
                     Unload(dock);
@@ -48,6 +46,15 @@ namespace warehouse_project
                 Console.WriteLine(x);
             }
             
+        }
+
+        public void CreateTruck(int numberOfMaxCrates)
+        {
+            Random randy = new Random();
+            Truck newTruck = new Truck();
+            int numOfCrates = randy.Next(1, numberOfMaxCrates);
+            for (int j = 0; j < numOfCrates; j++) newTruck.Load(new Crate());
+            this.Entrance.Enqueue(newTruck);
         }
 
         /// <summary>
@@ -63,6 +70,42 @@ namespace warehouse_project
                 Console.WriteLine($"Dock {i+1} - {Docks[i].Line.Count}");
             }
             Console.WriteLine("Unloaded");
+        }
+
+        public bool DoesTruckArive(int TimeIncrement)
+        {
+            Random randy = new Random();
+            Random randall = new Random();
+            Random randina = new Random();
+            Random rina = new Random();
+
+            if (Math.Abs(TimeIncrement - 24) < 10)
+            {
+                //Roll 1 Times
+                if (randy.Next(0,100) > numThatTruckHasToBeLargerThenFromOneHundred)
+                {
+                    return true;
+                }
+            }
+
+            else if (Math.Abs(TimeIncrement - 24) > 10)
+            {
+                //Roll 2 Times
+                if (randy.Next(0, 100) > numThatTruckHasToBeLargerThenFromOneHundred || randall.Next(0, 100) > numThatTruckHasToBeLargerThenFromOneHundred)
+                {
+                    return true;
+                }
+            }
+
+            else if (Math.Abs(TimeIncrement - 24) < 24)
+            {
+                // Roll 4 Times
+                if (randy.Next(0, 100) > numThatTruckHasToBeLargerThenFromOneHundred || randall.Next(0, 100) > numThatTruckHasToBeLargerThenFromOneHundred || randina.Next(0, 100) > numThatTruckHasToBeLargerThenFromOneHundred || rina.Next(0, 100) > numThatTruckHasToBeLargerThenFromOneHundred)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
