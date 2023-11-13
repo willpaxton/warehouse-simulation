@@ -12,7 +12,7 @@ namespace warehouse_project
 
         Queue<Truck> Entrance = new Queue<Truck>();
 
-        int numThatTruckHasToBeLargerThenFromOneHundred;
+        int numThatTruckHasToBeLargerThenFromOneHundred = 60; // i.e. 60 would be a 40% chance
 
         // accepts some arguments (constants) from the driver
         public void Run(int numberOfDocks, int numberOfStartingTrucks, int numberOfMaxCrates)
@@ -34,7 +34,7 @@ namespace warehouse_project
 
             for (int x = 0; x < 48; x++)
             {
-                if (DoesTruckArive(x))
+                if (DoesTruckArrive(x))
                 {
                     CreateTruck(numberOfMaxCrates);
                 }
@@ -55,6 +55,7 @@ namespace warehouse_project
             int numOfCrates = randy.Next(1, numberOfMaxCrates);
             for (int j = 0; j < numOfCrates; j++) newTruck.Load(new Crate());
             this.Entrance.Enqueue(newTruck);
+            Console.WriteLine("omg a new truck has been birthed");
         }
 
         /// <summary>
@@ -72,40 +73,42 @@ namespace warehouse_project
             Console.WriteLine("Unloaded");
         }
 
-        public bool DoesTruckArive(int TimeIncrement)
+        public bool DoesTruckArrive(int TimeIncrement)
         {
             Random randy = new Random();
             Random randall = new Random();
             Random randina = new Random();
             Random rina = new Random();
 
-            if (Math.Abs(TimeIncrement - 24) < 10)
+            if (Math.Abs(TimeIncrement - 24) >= 16)
             {
                 //Roll 1 Times
                 if (randy.Next(0,100) > numThatTruckHasToBeLargerThenFromOneHundred)
                 {
                     return true;
                 }
+                else return false;
             }
 
-            else if (Math.Abs(TimeIncrement - 24) > 10)
+            else if (Math.Abs(TimeIncrement - 24) >= 6)
             {
                 //Roll 2 Times
                 if (randy.Next(0, 100) > numThatTruckHasToBeLargerThenFromOneHundred || randall.Next(0, 100) > numThatTruckHasToBeLargerThenFromOneHundred)
                 {
                     return true;
                 }
+                else return false;
             }
 
-            else if (Math.Abs(TimeIncrement - 24) < 24)
+            else // if (Math.Abs(TimeIncrement - 24) < 30)
             {
                 // Roll 4 Times
                 if (randy.Next(0, 100) > numThatTruckHasToBeLargerThenFromOneHundred || randall.Next(0, 100) > numThatTruckHasToBeLargerThenFromOneHundred || randina.Next(0, 100) > numThatTruckHasToBeLargerThenFromOneHundred || rina.Next(0, 100) > numThatTruckHasToBeLargerThenFromOneHundred)
                 {
                     return true;
                 }
+                else return false;
             }
-            return false;
         }
 
         /// <summary>
@@ -143,7 +146,7 @@ namespace warehouse_project
                 double value = unloadedCrate.GetPrice();
                 dock.TotalSales += value;
                 dock.TimeInUse++;
-                Log();
+                //Log();
             }
             else dock.TimeNotInUse++;
 
