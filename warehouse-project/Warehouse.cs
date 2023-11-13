@@ -14,6 +14,20 @@ namespace warehouse_project
 
         int numThatTruckHasToBeLargerThenFromOneHundred = 65; // i.e. 60 would be a 40% chance (Mess with at end to balance)
 
+        int totalNumOfDocks;
+        int longestLineAtAnyLoadingDock;
+        int totalNumOfTrucksProcessed;
+        int totalNumOfCratesUnloaded;
+        int totalValOfCratesUnloaded;
+        int avgValOfEachCrate;
+        int avgValOfEachTruck;
+        int totalTimeEachDockWasUsed;
+        int totalAmountOfTimeDockWasntUsed;
+        int totalAmountOfTimeDockWasInUse;
+        int avgTimeDockWasInUse;
+        int totalCostOfOperatingEachDock;
+        int totalRevenueOfTheWarehouse;
+
         // accepts some arguments (constants) from the driver
         public void Run(int numberOfDocks, int numberOfStartingTrucks, int numberOfMaxCrates)
         {
@@ -76,6 +90,8 @@ namespace warehouse_project
                 Console.WriteLine($"Dock {i+1} - {Docks[i].Line.Count}");
             }
             Console.WriteLine("Unloaded");
+
+            //WriteData.WriteDataFile(/*num of docks open*/, /*longest line at any dock*/, /*total num of trucks processed*/, /*total num of trucks processed*/, /*total num of crates processed...*/);
         }
 
         public bool DoesTruckArrive(int TimeIncrement)
