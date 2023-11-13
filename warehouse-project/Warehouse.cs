@@ -12,7 +12,7 @@ namespace warehouse_project
 
         Queue<Truck> Entrance = new Queue<Truck>();
 
-        int numThatTruckHasToBeLargerThenFromOneHundred = 60; // i.e. 60 would be a 40% chance
+        int numThatTruckHasToBeLargerThenFromOneHundred = 65; // i.e. 60 would be a 40% chance
 
         // accepts some arguments (constants) from the driver
         public void Run(int numberOfDocks, int numberOfStartingTrucks, int numberOfMaxCrates)
