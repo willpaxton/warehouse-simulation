@@ -9,7 +9,7 @@ namespace warehouse_project
     public class Truck
     {
         string driver;
-        string deliveryCompany;
+        string deliveryCompany; 
         public Stack<Crate> Trailer = new Stack<Crate>();
 
         public void Load(Crate crate)

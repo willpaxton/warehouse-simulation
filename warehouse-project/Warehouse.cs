@@ -14,15 +14,15 @@ namespace warehouse_project
 
         int numThatTruckHasToBeLargerThenFromOneHundred = 65; // i.e. 60 would be a 40% chance (Mess with at end to balance)
 
-        int totalNumOfDocks;
-        int longestLineAtAnyLoadingDock;
-        int totalNumOfTrucksProcessed;
-        int totalNumOfCratesUnloaded;
-        int totalValOfCratesUnloaded;
-        int avgValOfEachCrate;
-        int avgValOfEachTruck;
-        int totalTimeEachDockWasUsed;
-        int totalAmountOfTimeDockWasntUsed;
+        int totalNumOfDocks; // done
+        int longestLineAtAnyLoadingDock = 0; // done
+        int totalNumOfTrucksProcessed; // done, counts fully unloaded trucks
+        int totalNumOfCratesUnloaded; // done
+        double totalValOfCratesUnloaded; // done
+        double avgValOfEachCrate; // done i think
+        double avgValOfEachTruck; // ???
+        int totalTimeEachDockWasUsed; 
+        int totalAmountOfTimeDockWasntUsed; // code implemented, maybe should change to datetime object, also i think its in the wrong spot
         int totalAmountOfTimeDockWasInUse;
         int avgTimeDockWasInUse;
         int totalCostOfOperatingEachDock;
@@ -31,6 +31,9 @@ namespace warehouse_project
         // accepts some arguments (constants) from the driver
         public void Run(int numberOfDocks, int numberOfStartingTrucks, int numberOfMaxCrates)
         {
+            // setting up some basic stats
+            totalNumOfDocks = numberOfDocks;
+
             // Creates the docks being used in this simulation
             for (int i = 0; i < numberOfDocks; i++)
             {
@@ -144,6 +147,8 @@ namespace warehouse_project
 
                 foreach (Dock dockLen in Docks)
                 {
+                    if (dockLen.Line.Count() > this.longestLineAtAnyLoadingDock) this.longestLineAtAnyLoadingDock = dockLen.Line.Count();
+
                     if (dockLen.Line.Count() < shortestLineLength)
                     {
                         shortestDock = dockLen; 
@@ -164,23 +169,55 @@ namespace warehouse_project
             if (dock.ActiveTruck != null)
             {
                 Crate unloadedCrate = dock.ActiveTruck.Unload();
+                this.totalNumOfCratesUnloaded++;
                 double value = unloadedCrate.GetPrice();
                 dock.TotalSales += value;
+
+                // Update Stats
+                this.totalNumOfCratesUnloaded++;
+
+                this.totalValOfCratesUnloaded += value;
+
+                // Calculate updated average
+                this.avgValOfEachCrate += (this.avgValOfEachCrate * this.totalNumOfCratesUnloaded + value);
+
                 dock.TimeInUse++;
                 //Log();
             }
-            else dock.TimeNotInUse++;
-
+            else
+            {
+                dock.TimeNotInUse++;
+                this.totalAmountOfTimeDockWasntUsed++; // adds one, maybe should add 30 minutes?
+            }
             // Swap Trucks
             if (dock.ActiveTruck is not null)
             {
                 if (dock.ActiveTruck.Trailer.Count == 0) dock.SendOff();
+                this.totalNumOfTrucksProcessed++;
 
             }
 
 
             // Log
         }
+
+        /// <summary>
+        /// Takes the current daily time increment and converts into into a time
+        /// </summary>
+        /// <param name="currentTimeIncrement">The current time increment</param>
+        /// <returns>A DateTime object with the correct time of day (date will not be correct)</returns>
+        internal DateTime ConvertToDateTime(int currentTimeIncrement)
+        {
+            DateTime currentTime = new DateTime(1970, 1, 1, 0, 0, 0); // Should resemble what time increment 0 is
+
+            for (int x = 0; x < currentTimeIncrement; x++)
+            {
+                currentTime.AddMinutes(30);
+            }
+
+            return currentTime;
+        }
+
 
 
     }
