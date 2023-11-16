@@ -11,6 +11,8 @@
             Warehouse simulation = new Warehouse();
 
             simulation.Run(NUMBER_OF_DOCKS, NUMBER_OF_MAX_TRUCKS, NUMBER_OF_MAX_CRATES);
+
+            simulation.CreateReport();
         }
     }
 }

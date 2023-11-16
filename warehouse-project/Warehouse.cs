@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,11 +22,11 @@ namespace warehouse_project
         double totalValOfCratesUnloaded; // done
         double avgValOfEachCrate; // done i think
         double avgValOfEachTruck; // ???
-        int totalTimeEachDockWasUsed; 
-        int totalAmountOfTimeDockWasntUsed; // code implemented, maybe should change to datetime object, also i think its in the wrong spot
-        int totalAmountOfTimeDockWasInUse;
-        int avgTimeDockWasInUse;
-        int totalCostOfOperatingEachDock;
+        int totalTimeEachDockWasUsed; // ???
+        int totalAmountOfTimeDockWasntUsed; // redundant
+        int totalAmountOfTimeDockWasInUse; //  redundant
+        int avgTimeDockWasInUse; // redundant
+        int totalCostOfOperatingEachDock; // calculate from total increments passed * incremental cost
         int totalRevenueOfTheWarehouse;
 
         // accepts some arguments (constants) from the driver
@@ -169,17 +170,18 @@ namespace warehouse_project
             if (dock.ActiveTruck != null)
             {
                 Crate unloadedCrate = dock.ActiveTruck.Unload();
-                this.totalNumOfCratesUnloaded++;
                 double value = unloadedCrate.GetPrice();
                 dock.TotalSales += value;
 
                 // Update Stats
-                this.totalNumOfCratesUnloaded++;
+                
 
                 this.totalValOfCratesUnloaded += value;
 
                 // Calculate updated average
-                this.avgValOfEachCrate += (this.avgValOfEachCrate * this.totalNumOfCratesUnloaded + value);
+                this.avgValOfEachCrate = (this.avgValOfEachCrate * this.totalNumOfCratesUnloaded + value) / (totalNumOfCratesUnloaded + 1);
+
+                this.totalNumOfCratesUnloaded++;
 
                 dock.TimeInUse++;
                 //Log();
@@ -187,7 +189,7 @@ namespace warehouse_project
             else
             {
                 dock.TimeNotInUse++;
-                this.totalAmountOfTimeDockWasntUsed++; // adds one, maybe should add 30 minutes?
+                
             }
             // Swap Trucks
             if (dock.ActiveTruck is not null)
@@ -216,6 +218,51 @@ namespace warehouse_project
             }
 
             return currentTime;
+        }
+
+        public void CreateReport()
+        {
+            //x The number of docks open during the simulation.
+            //x The longest line at any loading dock during the simulation.
+            //x The total number of trucks that were processed during the simulation.
+            //x The total number of crates that were unloaded during the simulation.
+            //x The total value of the crates that were unloaded during the simulation.
+            //x The average value of each crate unloaded during the simulation.
+            //x The average value of each truck unloaded during the simulation.
+            //x The total amount of time that a dock was in use.
+            //x The total amount of time that a dock was not in use.
+            //x The average amount of time that a dock was in use.
+            // The total cost of operating each dock.
+            // The total revenue of the warehouse(total value of crates – total operating cost)
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append($"There were {totalNumOfDocks} docks open during this simulation\n");
+            sb.Append($"The longest line to build up at a dock reached {longestLineAtAnyLoadingDock} trucks long (including the one unloading\n");
+            sb.Append($"A total of {totalNumOfTrucksProcessed} were unloaded at the warehouse\n");
+            sb.Append($"There were a total of {totalNumOfCratesUnloaded} crates unloaded during the simulation.\n");
+            sb.Append($"The total value of every crate unloaded during the simulation reached ${totalValOfCratesUnloaded}\n");
+            sb.Append($"The average value of each crate unloaded was ${Math.Round(avgValOfEachCrate, 2)}\n");
+            sb.Append($"The average value of each truck was ${avgValOfEachTruck}\n");
+            sb.Append($"The follow shows the time statistics for each dock:\n");
+
+
+            foreach (Dock dock in Docks)
+            {
+                sb.Append($"\tDock {dock.Id} - Time in Use: {dock.TimeInUse} - Time Not in Use: {dock.TimeNotInUse} - Usage Percentage: {Math.Round((double)dock.TimeInUse / ((double)dock.TimeInUse + (double)dock.TimeNotInUse), 2) * 100}%\n");
+                // Add profit of each dock
+            }
+
+            sb.Append($"It cost [FILLINLATER] to run each dock\n");
+            sb.Append($"The total revenue of the warehouse was $[FILLINLATER]\n");
+            sb.Append($"\n");
+            sb.Append($"\n");
+            sb.Append($"\n");
+            sb.Append($"\n");
+            sb.Append($"\n");
+
+            Console.WriteLine(sb);
+
         }
 
 
