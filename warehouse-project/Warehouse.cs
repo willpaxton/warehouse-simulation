@@ -64,7 +64,8 @@ namespace warehouse_project
 
                 foreach (Dock dock in Docks)
                 {
-                    Unload(dock);
+                    Unload(dock, x);
+                    
                 }
                 Console.WriteLine(x);
             }
@@ -139,7 +140,7 @@ namespace warehouse_project
         /// <summary>
         /// Completes one time span
         /// </summary>
-        public void Unload(Dock dock)
+        public void Unload(Dock dock, int currentTimePeriod)
         {
             while (this.Entrance.Count > 0)
             {
@@ -184,6 +185,9 @@ namespace warehouse_project
                 this.totalNumOfCratesUnloaded++;
 
                 dock.TimeInUse++;
+
+                WriteDataFile(currentTimePeriod, unloadedCrate.GetID(), unloadedCrate.GetPrice());
+
                 //Log();
             }
             else
@@ -214,7 +218,7 @@ namespace warehouse_project
 
             for (int x = 0; x < currentTimeIncrement; x++)
             {
-                currentTime.AddMinutes(30);
+                currentTime = currentTime.AddMinutes(30);
             }
 
             return currentTime;
@@ -249,7 +253,7 @@ namespace warehouse_project
 
             foreach (Dock dock in Docks)
             {
-                sb.Append($"\tDock {dock.Id} - Time in Use: {dock.TimeInUse} - Time Not in Use: {dock.TimeNotInUse} - Usage Percentage: {Math.Round((double)dock.TimeInUse / ((double)dock.TimeInUse + (double)dock.TimeNotInUse), 2) * 100}%\n");
+                sb.Append($"\tDock {dock.Id} - Time in Use: {dock.TimeInUse} - Time Not in Use: {dock.TimeNotInUse} - Usage Percentage: {Math.Round((double)dock.TimeInUse / ((double)dock.TimeInUse + (double)dock.TimeNotInUse), 2) * 100}% - Profit of Dock: [FILLINLATER]\n");
                 // Add profit of each dock
             }
 
@@ -263,6 +267,83 @@ namespace warehouse_project
 
             Console.WriteLine(sb);
 
+        }
+
+        /// <summary>
+        /// Edits a csv file to create a log of all the crates from this program
+        /// </summary>
+        /// <param name="timeIncrement">The Time Increment it was unloaded</param>
+        /// <param name="truckDriverName">Truck Drivers Name</param>
+        /// <param name="deliveryCompanyName">Name of the Delivery Company</param>
+        /// <param name="crateID">This crates personal ID</param>
+        /// <param name="crateValue">The value of this crate</param>
+        /// <param name="scenarioNum">The Number of the Scenario that is loaded</param>
+        /// <exception cref="FileLoadException">file could not be read or isn't in the correct format to be written to</exception>
+        public void WriteDataFile(int currentTimePeriod, string crateID, double crateValue)
+        {
+            try
+            {
+
+                string header = "day, time, del_comp, driver_lname, driver_fname, crate_id, crate_value, scenario";
+
+                //string fileNameWithAddon = $"crateData{DateTime.Now.ToString().Replace(" ", "").Replace("/", "-").Replace(":", "")}.csv";
+
+                string fileNameWithAddon = "crateDataaaaa.csv";
+
+                if (!File.Exists(fileNameWithAddon)) {
+                    using (StreamWriter createWriter = File.AppendText(fileNameWithAddon))
+                    {
+                        createWriter.WriteLine(header);
+                    };
+
+                }
+
+                
+                StreamWriter rwr = new StreamWriter(fileNameWithAddon, true);
+
+                //rwr.Close();
+
+                //StreamReader sr = new StreamReader(fileNameWithAddon);
+
+               
+
+                //if (sr.ReadLine() != header)
+                //{
+                //    rwr.WriteLine(header);
+                //}
+
+                rwr.WriteLine($"" +
+                    $"{ConvertToDateTime(currentTimePeriod).Day}," +
+                    $"{ConvertToDateTime(currentTimePeriod).TimeOfDay}," +
+                    $"[FILLINLATER]" +
+                    $"[FILLINLATER]," +
+                    $"{crateID}," +
+                    $"{crateValue}");
+                //if (scenarioNum == 1)
+                //{
+                //    Console.WriteLine("This crate has been unloaded, but there are more crates to unload from this Truck");
+                //}
+                //else if (scenarioNum == 2)
+                //{
+                //    Console.WriteLine("This crate has been unloaded, and this Truck has no more crates to unload, and another truck is in the dock already");
+                //}
+                //else if (scenarioNum == 3)
+                //{
+                //    Console.WriteLine("This Crate has been unloaded, and this Truck has no more crates to unload, but another truck is not in the dock");
+                //}
+                //else
+                //{
+                //    Console.WriteLine("Something has gone wrong.");
+                //}
+
+                rwr.Flush();
+
+                rwr.Close();
+            }
+            catch
+            {
+                throw new FileLoadException();
+            }
         }
 
 
