@@ -9,44 +9,44 @@ namespace warehouse_project
     internal class WriteData
     {
         /// <summary>
-        /// Edits a csv file to create a log of all the data ran from this program
+        /// Edits a csv file to create a log of all the crates from this program
         /// </summary>
-        /// <param name="numOfDocksOpen">name of the file ran by the sorting algorithm</param>
-        /// <param name="longestLineAtAnyLoadingDock">data type of the file ran either Book or Integer</param>
-        /// <param name="totalNumOfTrucksProcessed">type of algorithm ran either recursive or iterative</param>
-        /// <param name="totalNumOfCratesUnloaded">amount of time it took to finish sorting list</param>
-        /// <param name="totalValOfCratesUnloaded">name of the file ran by the sorting algorithm</param>
-        /// <param name="avgValOfEachCrate">data type of the file ran either Book or Integer</param>
-        /// <param name="avgValOfEachTruck">type of algorithm ran either recursive or iterative</param>
-        /// <param name="totalTimeEachDockWasUsed">amount of time it took to finish sorting list</param>
-        /// <param name="totalAmountOfTimeDockWasntUsed">name of the file ran by the sorting algorithm</param>
-        /// <param name="avgTimeDockWasInUse">data type of the file ran either Book or Integer</param>
-        /// <param name="totalCostOfOperatingEachDock">type of algorithm ran either recursive or iterative</param>
-        /// <param name="totalRevenueOfTheWarehouse">amount of time it took to finish sorting list</param>
+        /// <param name="timeIncrement">The Time Increment it was unloaded</param>
+        /// <param name="truckDriverName">Truck Drivers Name</param>
+        /// <param name="deliveryCompanyName">Name of the Delivery Company</param>
+        /// <param name="crateID">This crates personal ID</param>
+        /// <param name="crateValue">The value of this crate</param>
+        /// <param name="scenarioNum">The Number of the Scenario that is loaded</param>
         /// <exception cref="FileLoadException">file could not be read or isn't in the correct format to be written to</exception>
-        public void WriteDataFile(int numOfDocksOpen, int longestLineAtAnyLoadingDock, int totalNumOfTrucksProcessed, 
-            int totalNumOfCratesUnloaded, int totalValOfCratesUnloaded, int avgValOfEachCrate, int avgValOfEachTruck,
-             int totalTimeEachDockWasUsed, int totalAmountOfTimeDockWasntUsed, int totalAmountOfTimeDockWasInUse, 
-             int avgTimeDockWasInUse, int totalCostOfOperatingEachDock, int totalRevenueOfTheWarehouse)
+        public void WriteDataFile(int timeIncrement, string truckDriverName, string deliveryCompanyName, int crateID, int crateValue, int scenarioNum)
         {
             try
             {
-                StreamWriter rwr = new StreamWriter($@"..\..\..\data\output\spreadsheetData.csv", true);
+                StreamWriter rwr = new StreamWriter($@"..\..\..\data\output\crateData.csv", true);
 
-                rwr.WriteLine(
-                    $"There were {numOfDocksOpen} docks open. \n" +
-                    $"The Longest Line at any loading dock was {longestLineAtAnyLoadingDock}. \n" +
-                    $"There were a total of {totalNumOfTrucksProcessed} trucks processed. \n" +
-                    $"There were a total of {totalNumOfCratesUnloaded} crates unloaded. \n" +
-                    $"The total value of crates unloaded was ${totalValOfCratesUnloaded}. \n" +
-                    $"The average value of each crate was {avgValOfEachCrate}. \n" + //Find Good Way to do it
-                    $"The average value of each truck was {avgValOfEachTruck}. \n" + //Find Good Way to do it
-                    $"The total time each dock was used was {totalTimeEachDockWasUsed}. \n" + //Find Good Way to do it
-                    $"The total amount of time each dock wasn't used is {totalAmountOfTimeDockWasntUsed}. \n" + //Find Good Way to do it
-                    $"The total amount of time each dock was in use is {totalAmountOfTimeDockWasInUse}. \n" + //Find Good Way to do it
-                    $"The average time dock was in use is {avgTimeDockWasInUse}. \n" + //Find Good Way to do it
-                    $"The total cost of operating each is {totalCostOfOperatingEachDock}. \n" + //Find Good Way to do it
-                    $"The total revenue of the warehouse is {totalRevenueOfTheWarehouse}. ");
+                rwr.WriteLine($"" +
+                    $"Time Increment Unloaded: {timeIncrement}" +
+                    $"Truck Driver's Name: {truckDriverName}" +
+                    $"Delivery Company's Name: {deliveryCompanyName}" +
+                    $"Crate's ID: {crateID}" +
+                    $"Crate's Value: {crateValue}");
+
+                if (scenarioNum == 1 ) 
+                {
+                    Console.WriteLine("This crate has been unloaded, but there are more crates to unload from this Truck");
+                }
+                else if (scenarioNum == 2)
+                {
+                    Console.WriteLine("This crate has been unloaded, and this Truck has no more crates to unload, and another truck is in the dock already");
+                }
+                else if (scenarioNum == 3)
+                {
+                    Console.WriteLine("This Crate has been unloaded, and this Truck has no more crates to unload, but another truck is not in the dock");
+                }
+                else
+                {
+                    Console.WriteLine("Something has gone wrong.");
+                }
 
                 rwr.Flush();
 
