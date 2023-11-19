@@ -9,8 +9,9 @@ namespace warehouse_project
 {
     public class Truck
     {
-        string driver;
-        string deliveryCompany; 
+        public string driverFirstName;
+        public string driverLastName;
+        public string deliveryCompany; 
         public Stack<Crate> Trailer = new Stack<Crate>();
 
         public void Load(Crate crate)
@@ -27,9 +28,15 @@ namespace warehouse_project
         {
             Random random = new Random();
             
-            string line = File.ReadLines("C:\\Users\\wpaxt\\Documents\\Projects\\warehouse-simulation\\warehouse-project\\data\\driverData.csv").Skip(random.Next(0,1000)).Take(1).First();
+            string line = File.ReadLines("E:\\ETSU\\warehouse-simulation\\warehouse-project\\data\\driverData.csv").Skip(random.Next(0,1000)).Take(1).First();
 
-            Console.WriteLine(line);
+            string[] data = line.Split(",");
+            driverFirstName = data[0];
+            driverLastName = data[1];
+            deliveryCompany = data[2];
+            
+
+            //Console.WriteLine(line);
             
         }
     }

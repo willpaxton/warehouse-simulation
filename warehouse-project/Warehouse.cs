@@ -13,6 +13,8 @@ namespace warehouse_project
 
         Queue<Truck> Entrance = new Queue<Truck>();
 
+        int numberOfIncrements = 0;
+
         int numThatTruckHasToBeLargerThenFromOneHundred = 65; // i.e. 60 would be a 40% chance (Mess with at end to balance)
 
         int totalNumOfDocks; // done
@@ -30,10 +32,11 @@ namespace warehouse_project
         int totalRevenueOfTheWarehouse;
 
         // accepts some arguments (constants) from the driver
-        public void Run(int numberOfDocks, int numberOfStartingTrucks, int numberOfMaxCrates)
+        public void Run(int numberOfDocks, int numberOfMaxCrates, int numberOfDays)
         {
             // setting up some basic stats
             totalNumOfDocks = numberOfDocks;
+            numberOfIncrements = numberOfDays * 48;
 
             // Creates the docks being used in this simulation
             for (int i = 0; i < numberOfDocks; i++)
@@ -46,12 +49,13 @@ namespace warehouse_project
 
             // Adding new trucks to the warehouse queue
             Random randy = new Random();
-            int numOfTrucks = randy.Next(1, numberOfStartingTrucks);
+            
 
-            Console.WriteLine("!");
+            //Console.WriteLine("!");
 
-            for (int x = 0; x < 48; x++)
+            for (int x = 0; x < numberOfIncrements; x++)
             {
+
                 if (DoesTruckArrive(x))
                 {
                     CreateTruck(numberOfMaxCrates);
@@ -67,7 +71,7 @@ namespace warehouse_project
                     Unload(dock, x);
                     
                 }
-                Console.WriteLine(x);
+                // Console.WriteLine(x);
             }
             
         }
@@ -79,7 +83,6 @@ namespace warehouse_project
             int numOfCrates = randy.Next(1, numberOfMaxCrates);
             for (int j = 0; j < numOfCrates; j++) newTruck.Load(new Crate());
             this.Entrance.Enqueue(newTruck);
-            Console.WriteLine("omg a new truck has been birthed");
         }
 
         /// <summary>
@@ -142,7 +145,7 @@ namespace warehouse_project
         /// </summary>
         public void Unload(Dock dock, int currentTimePeriod)
         {
-            while (this.Entrance.Count > 0)
+            if (this.Entrance.Count > 0)
             {
                 Dock shortestDock = null;
                 int shortestLineLength = int.MaxValue;
@@ -186,7 +189,23 @@ namespace warehouse_project
 
                 dock.TimeInUse++;
 
-                WriteDataFile(currentTimePeriod, unloadedCrate.GetID(), unloadedCrate.GetPrice());
+                // R - Crates Remain
+                // S - Trucks Swapped
+                // E - Queue Empty
+                char currentScenario = 'R';
+
+                if (dock.ActiveTruck.Trailer.Count == 0)
+                { 
+                    if (dock.Line.Count == 1)
+                    {
+                        currentScenario = 'E';
+                    } else
+                    {
+                        currentScenario = 'S';
+                    }
+                }
+
+                    WriteDataFile(currentTimePeriod, unloadedCrate.GetID(), unloadedCrate.GetPrice(), dock.ActiveTruck.deliveryCompany, dock.ActiveTruck.driverLastName, dock.ActiveTruck.driverFirstName, currentScenario);
 
                 //Log();
             }
@@ -214,7 +233,7 @@ namespace warehouse_project
         /// <returns>A DateTime object with the correct time of day (date will not be correct)</returns>
         internal DateTime ConvertToDateTime(int currentTimeIncrement)
         {
-            DateTime currentTime = new DateTime(1970, 1, 1, 0, 0, 0); // Should resemble what time increment 0 is
+            DateTime currentTime = new DateTime(1970, 1, 1, 2, 0, 0); // Should resemble what time increment 0 is
 
             for (int x = 0; x < currentTimeIncrement; x++)
             {
@@ -242,28 +261,29 @@ namespace warehouse_project
             StringBuilder sb = new StringBuilder();
 
             sb.Append($"There were {totalNumOfDocks} docks open during this simulation\n");
-            sb.Append($"The longest line to build up at a dock reached {longestLineAtAnyLoadingDock} trucks long (including the one unloading\n");
+            sb.Append($"The longest line to build up at a dock reached {longestLineAtAnyLoadingDock} trucks long (including the one unloading)\n");
             sb.Append($"A total of {totalNumOfTrucksProcessed} were unloaded at the warehouse\n");
             sb.Append($"There were a total of {totalNumOfCratesUnloaded} crates unloaded during the simulation.\n");
-            sb.Append($"The total value of every crate unloaded during the simulation reached ${totalValOfCratesUnloaded}\n");
-            sb.Append($"The average value of each crate unloaded was ${Math.Round(avgValOfEachCrate, 2)}\n");
-            sb.Append($"The average value of each truck was ${avgValOfEachTruck}\n");
+            sb.Append($"The total value of every crate unloaded during the simulation reached {totalValOfCratesUnloaded.ToString("C")}\n");
+            sb.Append($"The average value of each crate unloaded was {Math.Round(avgValOfEachCrate, 2).ToString("C")}\n");
+            sb.Append($"The average value of each truck was {avgValOfEachTruck.ToString("C")}\n");
             sb.Append($"The follow shows the time statistics for each dock:\n");
 
+            double totalRevenue = 0;
 
             foreach (Dock dock in Docks)
             {
-                sb.Append($"\tDock {dock.Id} - Time in Use: {dock.TimeInUse} - Time Not in Use: {dock.TimeNotInUse} - Usage Percentage: {Math.Round((double)dock.TimeInUse / ((double)dock.TimeInUse + (double)dock.TimeNotInUse), 2) * 100}% - Profit of Dock: [FILLINLATER]\n");
+                sb.Append($"\tDock {dock.Id} - Time in Use: {dock.TimeInUse} - Time Not in Use: {dock.TimeNotInUse} - Usage Percentage: {Math.Round((double)dock.TimeInUse / ((double)dock.TimeInUse + (double)dock.TimeNotInUse), 2) * 100}% - Profit of Dock: {dock.TotalSales.ToString("C")}\n");
                 // Add profit of each dock
+
+                totalRevenue += dock.TotalSales;
             }
 
-            sb.Append($"It cost [FILLINLATER] to run each dock\n");
-            sb.Append($"The total revenue of the warehouse was $[FILLINLATER]\n");
-            sb.Append($"\n");
-            sb.Append($"\n");
-            sb.Append($"\n");
-            sb.Append($"\n");
-            sb.Append($"\n");
+            double totalCostToRun = this.Docks.Count * this.numberOfIncrements * 100;
+
+            sb.Append($"It cost {totalCostToRun.ToString("C")} to run the warehouse\n"); // time increments * num of docks * 100
+            sb.Append($"The total profit of the warehouse was {(totalRevenue - totalCostToRun).ToString("C")}\n");
+
 
             Console.WriteLine(sb);
 
@@ -279,7 +299,7 @@ namespace warehouse_project
         /// <param name="crateValue">The value of this crate</param>
         /// <param name="scenarioNum">The Number of the Scenario that is loaded</param>
         /// <exception cref="FileLoadException">file could not be read or isn't in the correct format to be written to</exception>
-        public void WriteDataFile(int currentTimePeriod, string crateID, double crateValue)
+        public void WriteDataFile(int currentTimePeriod, string crateID, double crateValue, string companyName, string lastName, string firstName, char scenario)
         {
             try
             {
@@ -288,7 +308,7 @@ namespace warehouse_project
 
                 //string fileNameWithAddon = $"crateData{DateTime.Now.ToString().Replace(" ", "").Replace("/", "-").Replace(":", "")}.csv";
 
-                string fileNameWithAddon = "crateDataaaaa.csv";
+                string fileNameWithAddon = "crateDataaaaaaaaa.csv";
 
                 if (!File.Exists(fileNameWithAddon)) {
                     using (StreamWriter createWriter = File.AppendText(fileNameWithAddon))
@@ -315,10 +335,12 @@ namespace warehouse_project
                 rwr.WriteLine($"" +
                     $"{ConvertToDateTime(currentTimePeriod).Day}," +
                     $"{ConvertToDateTime(currentTimePeriod).TimeOfDay}," +
-                    $"[FILLINLATER]" +
-                    $"[FILLINLATER]," +
+                    $"{companyName}," +
+                    $"{lastName}," +
+                    $"{firstName}," +
                     $"{crateID}," +
-                    $"{crateValue}");
+                    $"{crateValue.ToString("C")}," +
+                    $"{scenario}");
                 //if (scenarioNum == 1)
                 //{
                 //    Console.WriteLine("This crate has been unloaded, but there are more crates to unload from this Truck");
