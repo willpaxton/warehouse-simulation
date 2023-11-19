@@ -1,4 +1,14 @@
-﻿using System.Text.RegularExpressions;
+﻿///////////////////////////////////////////////////////////////////////////////
+//
+// Author: Will Paxton & Nick Trahan
+// Course: CSCI-2210-001 - Data Structures
+// Assignment: Project 3
+// Description: Programming a Warehouse to demostrate profiency with data structures.
+// 
+//
+/////////////////////////////////////////////////////////////////////////////// 
+
+using System.Text.RegularExpressions;
 
 namespace warehouse_project
 {
