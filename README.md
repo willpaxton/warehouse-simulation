@@ -5,6 +5,7 @@
   - 10pm-6am - "Low" Period - Rolls a dice with a 33% chance of making a truck show up in a time period 
   - 6am-11am, 5pm-10pm - "Moderate" Period - Rolls a dice with a 50% chance of making a truck show up in a time period 
   - 11am-5pm - "High" Period - Rolls a dice with a 80% chance of making a truck show up in a time period, with a 33% chance on top for 2 trucks to show up in a given time period
+- The simulation starts at 2am, in the middle of the low period.
 - Both of the recommendations were based off the Warehouse being open for 7 days, with each truck carrying a maximum of 25 crates.
 
 ---
