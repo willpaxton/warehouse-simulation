@@ -1,6 +1,7 @@
 # warehouse-simulation
 # Notes
-- The program must be ran by using the ```dotnet run``` command inside of the working folder
+- The program must be ran by using the ```dotnet run``` command inside of the working folder so that the program can properly access files
+- The crateData.csv file will export to the data folder
 - It is assumed that this warehouse is open 24/7 and will not have any downtime
 - Our truck arrival distribution is based on a scale with the following times
   - 10pm-6am - "Low" Period - Rolls a dice with a 33% chance of making a truck show up in a time period 
