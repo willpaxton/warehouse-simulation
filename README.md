@@ -5,7 +5,7 @@
   - 10pm-6am - "Low" Period - Rolls a dice with a 33% chance of making a truck show up in a time period 
   - 6am-11am, 5pm-10pm - "Moderate" Period - Rolls a dice with a 50% chance of making a truck show up in a time period 
   - 11am-5pm - "High" Period - Rolls a dice with a 80% chance of making a truck show up in a time period, with a 33% chance on top for 2 trucks to show up in a given time period
-- Both of the recommendations were based off the Warehouse being open for 7 days, with each truck carrying a maximum of 25 crates:
+- Both of the recommendations were based off the Warehouse being open for 7 days, with each truck carrying a maximum of 25 crates.
 
 ---
 
@@ -15,4 +15,4 @@ I believe the proper amount of docks to be open is 8. This is because of the fac
 ---
 
 ### Will Paxton ###
-
+Using the 7 days of simulation with each truck having a maximum capacity of 25, it looks that having 7 docks would be the best for the warehouse.  With 7 docks, every dock would have an 80% or higher usage time, meaning that operation costs are not being wasted.  7 docks also consistently gets the highest profit over other options (such as 6 and 8 docks).  
