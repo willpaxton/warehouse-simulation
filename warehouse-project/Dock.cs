@@ -18,11 +18,11 @@ using System.Threading.Tasks;
 namespace warehouse_project
 {
     /// <summary>
-    /// 
+    /// A loading dock for the warehouse
     /// </summary>
     public class Dock
     {
-        public string Id { get; set; } // probably should be incremental
+        public string Id { get; set; }
 
         public Queue<Truck> Line = new Queue<Truck>();
 
