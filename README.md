@@ -16,4 +16,4 @@ I believe the proper amount of docks to be open is 8. This is because of the fac
 ---
 
 ### Will Paxton ###
-Using the 7 days of simulation with each truck having a maximum capacity of 25, it looks that having 7 docks would be the best for the warehouse.  With 7 docks, every dock would have an 80% or higher usage time, meaning that operation costs are not being wasted.  7 docks also consistently gets the highest profit over other options (such as 6 or 8 docks).  
+Using the 7 days of simulation with each truck having a maximum capacity of 25, it looks that having 7 docks would be the best for the warehouse.  With 7 docks, every dock would have an 80% or higher usage time, meaning that operation costs are not being wasted.  7 docks also consistently gets the highest profit over other options (such as 6 or 8 docks).  Using 7 docks nets around $375k in profit, while using 6 or 8 docks nets $300k-$350k in profit.
