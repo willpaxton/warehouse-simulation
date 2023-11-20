@@ -47,7 +47,7 @@ namespace warehouse_project
 
             simulation.Run(numOfDocks, numOfCrates, numOfDays);
 
-            Console.Write("\n\n\n\n\n");
+            Console.Write("\n");
 
             simulation.CreateReport();
 ;

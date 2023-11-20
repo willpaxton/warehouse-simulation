@@ -82,13 +82,11 @@ namespace warehouse_project
 
                 if (DoesTruckArrive(timeIncrement))
                 {
-                    Console.WriteLine("truck A");
                     CreateTruck(numberOfMaxCrates);
                     
 
                     if (Math.Abs(timeIncrement - 24) <= 6 && randy.Next(0, 100) >= 100 - 33) // 33% chance of second truck arriving during high period
                     {
-                        Console.WriteLine("truck B");
                         CreateTruck(numberOfMaxCrates);
                     }
                 }
@@ -98,7 +96,6 @@ namespace warehouse_project
                     Unload(dock, x);
                     
                 }
-                Console.WriteLine(ConvertToDateTime(x));
             }
             
         }
@@ -319,6 +316,22 @@ namespace warehouse_project
                 
                 StreamWriter rwr = new StreamWriter(fileNameWithAddon, true);
 
+                // R - Crates Remain
+                // S - Trucks Swapped
+                // E - Queue Empty
+                string scenarioString;
+
+                if (scenario == 'R')
+                {
+                    scenarioString = "Crates remain in the truck";
+                } else if (scenario == 'S')
+                {
+                    scenarioString = "The truck was fully unloaded and swapped with the next in queue";
+                } else
+                {
+                    scenarioString = "The truck was fully unloaded and the queue for the dock was empty";
+                }
+
 
                 rwr.WriteLine($"" +
                     $"{ConvertToDateTime(currentTimePeriod).Day}," +
@@ -328,7 +341,7 @@ namespace warehouse_project
                     $"{firstName}," +
                     $"{crateID}," +
                     $"{crateValue.ToString("C")}," +
-                    $"{scenario}");
+                    $"{scenarioString}");
 
                 rwr.Flush();
 
