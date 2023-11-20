@@ -9,6 +9,6 @@
 ---
 ### Nick Trahan ###
 I believe the proper amount of docks to be open is 8. This is because of the fact that it led to the highest profit. Its profit was about $426,917, while 7 and 9 were around 325k - 375k. 8 docks, while not the highest average per truck, was the highest average price per Crate.
----
+
 ### Will Paxton ###
 
