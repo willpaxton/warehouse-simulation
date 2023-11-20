@@ -70,8 +70,6 @@ namespace warehouse_project
                 Docks.Add(dock);
             }
 
-            // So for now, this is only working through one time period, everything below will need to be looped
-
             // Adding new trucks to the warehouse queue
             Random randy = new Random();
             
@@ -186,21 +184,13 @@ namespace warehouse_project
 
             }
 
-            // Check if dock line empty, if so, add truck
-            // if (dock.ActiveTruck == null) dock.JoinLine(this.Entrance.Dequeue());
-
             // Unload
-            // need to implement totalcrates count
             if (dock.ActiveTruck != null)
             {
                 Crate unloadedCrate = dock.ActiveTruck.Unload();
                 double value = unloadedCrate.GetPrice();
                 dock.TotalSales += value;
-                
-
-                // Update Stats
-                
-
+             
                 this.totalValOfCratesUnloaded += value;
 
                 // Calculate updated average
@@ -227,8 +217,6 @@ namespace warehouse_project
                 }
 
                     WriteDataFile(currentTimePeriod, unloadedCrate.GetID(), unloadedCrate.GetPrice(), dock.ActiveTruck.deliveryCompany, dock.ActiveTruck.driverLastName, dock.ActiveTruck.driverFirstName, currentScenario);
-
-                //Log();
             }
             else
             {
@@ -244,14 +232,7 @@ namespace warehouse_project
                     dock.SendOff();
                     trucksFullyUnloaded++;
                 }
-
-                
-
-
             }
-
-
-            // Log
         }
 
         /// <summary>
@@ -276,19 +257,6 @@ namespace warehouse_project
         /// </summary>
         public void CreateReport()
         {
-            //x The number of docks open during the simulation.
-            //x The longest line at any loading dock during the simulation.
-            //x The total number of trucks that were processed during the simulation.
-            //x The total number of crates that were unloaded during the simulation.
-            //x The total value of the crates that were unloaded during the simulation.
-            //x The average value of each crate unloaded during the simulation.
-            //x The average value of each truck unloaded during the simulation.
-            //x The total amount of time that a dock was in use.
-            //x The total amount of time that a dock was not in use.
-            //x The average amount of time that a dock was in use.
-            // The total cost of operating each dock.
-            // The total revenue of the warehouse(total value of crates – total operating cost)
-
             StringBuilder sb = new StringBuilder();
 
             sb.Append($"There were {totalNumOfDocks} docks open during this simulation\n");
@@ -334,14 +302,11 @@ namespace warehouse_project
         {
             try
             {
-
                 string header = "day, time, del_comp, driver_lname, driver_fname, crate_id, crate_value, scenario";
 
-                //string fileNameWithAddon = $"crateData{DateTime.Now.ToString().Replace(" ", "").Replace("/", "-").Replace(":", "")}.csv";
 
                 // finds a new filename to use
                 
-
                 string fileNameWithAddon = dataFile;
 
                 if (!File.Exists(fileNameWithAddon)) {
@@ -351,20 +316,9 @@ namespace warehouse_project
                     };
 
                 }
-
                 
                 StreamWriter rwr = new StreamWriter(fileNameWithAddon, true);
 
-                //rwr.Close();
-
-                //StreamReader sr = new StreamReader(fileNameWithAddon);
-
-               
-
-                //if (sr.ReadLine() != header)
-                //{
-                //    rwr.WriteLine(header);
-                //}
 
                 rwr.WriteLine($"" +
                     $"{ConvertToDateTime(currentTimePeriod).Day}," +
@@ -375,22 +329,6 @@ namespace warehouse_project
                     $"{crateID}," +
                     $"{crateValue.ToString("C")}," +
                     $"{scenario}");
-                //if (scenarioNum == 1)
-                //{
-                //    Console.WriteLine("This crate has been unloaded, but there are more crates to unload from this Truck");
-                //}
-                //else if (scenarioNum == 2)
-                //{
-                //    Console.WriteLine("This crate has been unloaded, and this Truck has no more crates to unload, and another truck is in the dock already");
-                //}
-                //else if (scenarioNum == 3)
-                //{
-                //    Console.WriteLine("This Crate has been unloaded, and this Truck has no more crates to unload, but another truck is not in the dock");
-                //}
-                //else
-                //{
-                //    Console.WriteLine("Something has gone wrong.");
-                //}
 
                 rwr.Flush();
 
